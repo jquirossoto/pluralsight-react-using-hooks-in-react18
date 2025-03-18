@@ -1,6 +1,7 @@
-import SpeakerLine from "./SpeakerLine";
-import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
+import { useContext, useEffect, useReducer, useState } from "react";
+import { ThemeContext } from "../../App";
+import SpeakerLine from "./SpeakerLine";
 
 function List({ state, dispatch }) {
   const [updatingId, setUpdatingId] = useState(0);
@@ -67,7 +68,7 @@ function List({ state, dispatch }) {
 }
 
 const SpeakerList = () => {
-  const darkTheme = false;
+  const { darkTheme } = useContext(ThemeContext);
 
   function reducer(state, action) {
     switch (action.type) {
