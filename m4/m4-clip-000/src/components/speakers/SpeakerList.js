@@ -1,11 +1,25 @@
+import axios from "axios";
+import { useEffect, useReducer, useState } from "react";
 import SpeakerLine from "./SpeakerLine";
-import { speakerList } from "../../../speakersData";
 
-function List() {
-  const updatingId = 0; // 1269;
+function List({ state, dispatch }) {
+  const [updatingId, setUpdatingId] = useState(0);
   const isPending = false;
+  const speakers = state.speakers;
 
-  function toggleFavoriteSpeaker(speakerRec) {}
+  function toggleFavoriteSpeaker(speakerRec) {
+    const updatedSpeaker = { ...speakerRec, favorite: !speakerRec.favorite };
+
+    dispatch({ type: "updateSpeaker", speaker: updatedSpeaker });
+
+    async function updateRecord() {
+      setUpdatingId(speakerRec.id);
+      await axios.put(`/api/speakers/${speakerRec.id}`, updatedSpeaker);
+      setUpdatingId(0);
+    }
+
+    updateRecord();
+  }
 
   return (
     <div className="container">
@@ -35,7 +49,7 @@ function List() {
       </div>
 
       <div className="row g-3">
-        {speakerList.map(function (speakerRec) {
+        {speakers.map(function (speakerRec) {
           const highlight = false;
           return (
             <SpeakerLine
@@ -54,9 +68,45 @@ function List() {
 
 const SpeakerList = () => {
   const darkTheme = false;
+  function reducer(state, action) {
+    switch (action.type) {
+      case "speakersLoaded":
+        return { ...state, loading: false, speakers: action.speakers };
+      case "setLoadingStatus":
+        return { ...state, loading: true };
+      case "updateSpeaker":
+        return {
+          ...state,
+          speakers: state.speakers.map((speaker) =>
+            speaker.id === action.speaker.id ? action.speaker : speaker
+          ),
+        };
+      default:
+        throw new Error("Unexpected action");
+    }
+  }
+  const [state, dispatch] = useReducer(reducer, {
+    speakers: [],
+    loading: true,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch({ type: "setLoadingStatus" });
+      const response = await axios.get("/api/speakers");
+      dispatch({ type: "speakersLoaded", speakers: response.data });
+    };
+
+    fetchData();
+  }, []);
+
+  if (state.loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className={darkTheme ? "theme-dark" : "theme-light"}>
-      <List />
+      <List state={state} dispatch={dispatch} />
     </div>
   );
 };

@@ -14,7 +14,6 @@
       "imageUrl": "/images/Speaker-1269.jpg",
       "email": "Arun.Gupta@codecamp.net"
     },
-
     {
       "id": 5996,
       "firstName": "Craig",
@@ -35,7 +34,7 @@
       "lastName": "Nielsen",
       "sat": true,
       "sun": true,
-      "favorite": false,
+      "favorite": true,
       "bio": "As Head of Ecosystem Programs, Dave uses emerging technologies and open source projects like Microservices, Serverless & Kubernetes to bring the magic of Redis to the broader community.",
       "company": "Intel",
       "twitterHandle": "davenielsen",
@@ -85,7 +84,6 @@
       "imageUrl": "/images/Speaker-8367.jpg",
       "email": "Gayle Laakmann.McDowell@codecamp.net"
     },
-
     {
       "id": 18805,
       "firstName": "Mickey W.",
