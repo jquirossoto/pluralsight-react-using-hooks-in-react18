@@ -1,16 +1,19 @@
-import SpeakerLine from "./SpeakerLine";
+import axios from "axios";
 import {
   useCallback,
   useContext,
+  useDeferredValue,
   useEffect,
   useReducer,
   useState,
 } from "react";
 import { ThemeContext } from "../contexts/ThemeContext";
-import axios from "axios";
+import SpeakerLine from "./SpeakerLine";
 
 function List({ state, dispatch }) {
   const [updatingId, setUpdatingId] = useState(0);
+  const [searchName, setSearchName] = useState("");
+  const deferredSearchName = useDeferredValue(searchName);
   const isPending = false;
   const speakers = state.speakers;
 
@@ -42,8 +45,10 @@ function List({ state, dispatch }) {
           <div className="toolbar-trigger mb-3 flex-grow-04">
             <div className="toolbar-search w-100">
               <input
-                value=""
-                onChange={(event) => {}}
+                value={searchName}
+                onChange={(event) => {
+                  setSearchName(event.target.value);
+                }}
                 type="text"
                 className="form-control"
                 placeholder="Highlight Names"
@@ -60,7 +65,14 @@ function List({ state, dispatch }) {
 
       <div className="row g-3">
         {speakers.map(function (speakerRec) {
-          const highlight = false;
+          const highlight =
+            deferredSearchName?.length > 0 &&
+            (
+              speakerRec.firstName?.toLowerCase() +
+              speakerRec.lastName?.toLowerCase()
+            ).includes(deferredSearchName.toLowerCase())
+              ? true
+              : false;
           return (
             <SpeakerLine
               key={speakerRec.id}
@@ -88,7 +100,7 @@ const SpeakerList = () => {
         return {
           ...state,
           loading: false,
-          speakers: action.speakers,
+          speakers: [...action.speakers, ...createDummySpeakers(8000)],
         };
       case "setLoadingStatus":
         return {
@@ -146,3 +158,22 @@ const SpeakerList = () => {
 };
 
 export default SpeakerList;
+
+const createDummySpeakers = (numToAdd) => {
+  let speakers = [];
+  for (let i = 1; i < numToAdd; i++) {
+    speakers.push({
+      id: 100000 + i,
+      firstName: `Craig${i}`,
+      lastName: `Mantle${i}`,
+      favorite: false,
+      bio: "fake bio",
+      company: "fake company",
+      twitterHandle: `fakeTwitterHandle${i}`,
+      userBioShort: `fake short bio ${i}`,
+      imageUrl: "",
+      email: `FakeEmail${i}@codecamp.net`,
+    });
+  }
+  return speakers;
+};
