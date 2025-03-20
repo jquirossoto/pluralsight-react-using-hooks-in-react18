@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { SpeakerMenuContext } from "../contexts/SpeakerMenuContext";
 import AddSpeakerDialog from "./AddSpeakerDialog";
 
 export default function SpeakerMenu() {
@@ -8,14 +10,7 @@ export default function SpeakerMenu() {
     setSpeakingSunday,
     searchText,
     setSearchText,
-  } = {
-    speakingSaturday: true,
-    setSpeakingSaturday: () => {},
-    speakingSunday: true,
-    setSpeakingSunday: () => {},
-    searchText: "",
-    setSearchText: () => {},
-  };
+  } = useContext(SpeakerMenuContext);
 
   return (
     <div

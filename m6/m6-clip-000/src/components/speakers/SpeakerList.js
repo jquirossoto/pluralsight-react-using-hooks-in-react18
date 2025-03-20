@@ -1,9 +1,13 @@
-import SpeakerLine from "./SpeakerLine";
-import { useContext, useEffect, useReducer, useState } from "react";
-import { ThemeContext } from "../../App";
 import axios from "axios";
+import { useContext, useEffect, useReducer, useState } from "react";
+import { SpeakersDataContext } from "../contexts/SpeakersDataContext";
+import { ThemeContext } from "../contexts/ThemeContext";
+import { useSpeakerSortAndFilter } from "../hooks/useSpeakerSortAndFilter";
+import SpeakerLine from "./SpeakerLine";
 
 function List({ state, dispatch }) {
+  const { speakerList } = useContext(SpeakersDataContext);
+  const speakerListFiltered = useSpeakerSortAndFilter(speakerList);
   const [updatingId, setUpdatingId] = useState(0);
   const isPending = false;
   const speakers = state.speakers;
@@ -50,7 +54,7 @@ function List({ state, dispatch }) {
       </div>
 
       <div className="row g-3">
-        {speakers.map(function (speakerRec) {
+        {speakerListFiltered.map(function (speakerRec) {
           const highlight = false;
           return (
             <SpeakerLine
