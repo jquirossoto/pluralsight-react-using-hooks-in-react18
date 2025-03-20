@@ -1,9 +1,9 @@
-import { useContext } from "react";
-import { SpeakerMenuContext } from "../contexts/SpeakerMenuContext";
-
-export default function useSpeakerSortAndFilter(speakerList) {
-  const { speakingSaturday, speakingSunday, searchText } =
-    useContext(SpeakerMenuContext);
+export default function useSpeakerSortAndFilter(
+  speakerList,
+  speakingSaturday,
+  speakingSunday,
+  searchText
+) {
   return speakerList
     ? speakerList
         .filter(

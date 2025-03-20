@@ -1,7 +1,13 @@
-import SpeakerLine from "./SpeakerLine";
-import { useContext, useEffect, useReducer, useState } from "react";
-import { ThemeContext } from "../contexts/ThemeContext";
 import axios from "axios";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import { ThemeContext } from "../contexts/ThemeContext";
+import SpeakerLine from "./SpeakerLine";
 
 function List({ state, dispatch }) {
   const [updatingId, setUpdatingId] = useState(0);
@@ -60,7 +66,10 @@ function List({ state, dispatch }) {
               key={speakerRec.id}
               speakerRec={speakerRec}
               updating={updatingId === speakerRec.id ? updatingId : 0}
-              toggleFavoriteSpeaker={() => toggleFavoriteSpeaker(speakerRec)}
+              toggleFavoriteSpeaker={useCallback(
+                () => toggleFavoriteSpeaker(speakerRec),
+                [speakerRec.favorite]
+              )}
               highlight={highlight}
             />
           );
